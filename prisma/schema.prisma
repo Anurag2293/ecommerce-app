@@ -12,3 +12,20 @@ model notes {
   title String?
   body  String?
 }
+
+model products {
+  id                  Int      @id @default(autoincrement())
+  title               String?  @db.VarChar(255)
+  description         String?
+  price               Decimal? @db.Decimal(10, 2)
+  discount_percentage Decimal? @db.Decimal(5, 2)
+  rating              Decimal? @db.Decimal(3, 2)
+  stock               Int?
+  brand               String?  @db.VarChar(255)
+  thumbnail           String?  @db.VarChar(255)
+  image1              String?  @db.VarChar(255)
+  image2              String?  @db.VarChar(255)
+  image3              String?  @db.VarChar(255)
+  image4              String?  @db.VarChar(255)
+  image5              String?  @db.VarChar(255)
+}
