@@ -37,3 +37,8 @@ model customers {
   email        String? @unique @db.VarChar(255)
   phone_number String? @db.VarChar(255)
 }
+
+model categories {
+  id   Int     @id @default(autoincrement())
+  name String? @unique
+}
