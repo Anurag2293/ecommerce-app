@@ -1,44 +1,49 @@
 "use client"
 
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 export default function Signup({
     searchParams,
 }: {
     searchParams: { message: string }
 }) {
+    const router = useRouter()
 
     const signUpClient = async (formData: FormData) => {
-        const first_name = formData.get('first_name') as string
-        const last_name = formData.get('last_name') as string
-        const email = formData.get('email') as string
-        const password = formData.get('password') as string
-        const phone = formData.get('phone') as string
+        try {
+            const first_name = formData.get('first_name') as string
+            const last_name = formData.get('last_name') as string
+            const email = formData.get('email') as string
+            const password = formData.get('password') as string
+            const phone = formData.get('phone') as string
 
-        const res = await fetch(`${origin}/api/signup`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                first_name,
-                last_name,
-                email,
-                password,
-                phone,
-                origin: "http://localhost:3000"
-            }),
-        })
-        const { error, response } = await res.json()
+            const res = await fetch(`${origin}/api/auth/signup`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    first_name,
+                    last_name,
+                    email,
+                    password,
+                    phone,
+                    origin: "http://localhost:3000"
+                }),
+            })
+            const { error, response } = await res.json()
 
-        if (error) {
-            return redirect(`/login?message=${error.message}`)
+            if (error) {
+                console.log({error});
+                throw new Error(error.message)
+            }
+            
+            return router.push('/login?message=Enter Your Credentials to Login')
+        } catch (error: any) {
+            console.log(error);
+            return router.replace(`/signup?message=${error.message || "Could not authenticate user"}`)
         }
-
-        console.log({ response })
-        
-        return redirect('/login?message=Enter Your Credentials to Login')
     }
 
     return (

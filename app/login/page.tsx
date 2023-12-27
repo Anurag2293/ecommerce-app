@@ -1,31 +1,39 @@
+"use client"
+
 import Link from 'next/link'
-import { headers, cookies } from 'next/headers'
-import { createClient } from '@/utils/supabase/server'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 export default function Login({
 	searchParams,
 }: {
 	searchParams: { message: string }
 }) {
-	const signIn = async (formData: FormData) => {
-		'use server'
+	const router = useRouter()
 
-		const email = formData.get('email') as string
-		const password = formData.get('password') as string
-		const cookieStore = cookies()
-		const supabase = createClient(cookieStore)
+	const signInClient = async (formData: FormData) => {
+		console.log("sign in client")
+		try {
+			const email = formData.get('email') as string
+			const password = formData.get('password') as string
 
-		const { error } = await supabase.auth.signInWithPassword({
-			email,
-			password,
-		})
+			const res = await fetch('/api/auth/login', {
+				method: 'POST',
+				body: JSON.stringify({ email, password }),
+			})
+			const { error, response } = await res.json()
 
-		if (error) {
-			return redirect('/login?message=Could not authenticate user')
+			console.log({ error, response })
+
+			if (error) {
+				console.log(error);
+				throw new Error(error.message)
+			}
+
+			return router.replace('/')
+		} catch (error: any) {
+			console.log(error);
+			return router.push(`/login?message=${error.message}`)
 		}
-
-		return redirect('/')
 	}
 
 	return (
@@ -53,7 +61,7 @@ export default function Login({
 
 			<form
 				className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
-				action={signIn}
+				action={signInClient}
 			>
 				<label className="text-md" htmlFor="email">
 					Email
@@ -86,3 +94,26 @@ export default function Login({
 		</div>
 	)
 }
+
+
+/*
+const signIn = async (formData: FormData) => {
+	'use server'
+
+	const email = formData.get('email') as string
+	const password = formData.get('password') as string
+	const cookieStore = cookies()
+	const supabase = createClient(cookieStore)
+
+	const { error } = await supabase.auth.signInWithPassword({
+		email,
+		password,
+	})
+
+	if (error) {
+		return redirect('/login?message=Could not authenticate user')
+	}
+
+	return redirect('/')
+}
+*/
