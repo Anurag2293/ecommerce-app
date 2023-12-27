@@ -29,3 +29,11 @@ model products {
   image4              String?  @db.VarChar(255)
   image5              String?  @db.VarChar(255)
 }
+
+model customers {
+  id           String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  first_name   String? @db.VarChar(255)
+  last_name    String? @db.VarChar(255)
+  email        String? @unique @db.VarChar(255)
+  phone_number String? @db.VarChar(255)
+}
