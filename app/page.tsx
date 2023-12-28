@@ -1,17 +1,29 @@
 "use client"
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
+
 import { createClient } from "@/utils/supabase/client";
+import { AppDispatch, useAppSelector } from "@/store/store";
+import { logIn, logOut } from "@/store/features/auth-slice";
+import { useDispatch } from "react-redux";
 
 export default function Index() {
 	const supabase = createClient();
-	const [isLogged, setIsLogged] = useState(false);
+	const isAuthenticated = useAppSelector((state) => state.authReducer.value.isAuthenticated);
+	const dispatch = useDispatch<AppDispatch>();
 
 	const checkSession = async () => {
-		const session = await supabase.auth.getSession();
-		console.log({ session: session.data.session });
-		setIsLogged(session.data.session !== null ? true : false);
+		try {
+			const session = await supabase.auth.getSession();
+			if (session.data.session) {
+				dispatch(logIn({username: String(session.data.session?.user.email), uid: String(session.data.session?.user.id) }));
+			} else {
+				dispatch(logOut());
+			}
+		} catch (error: any) {
+			alert(error.message);
+		}
 	}
 
 	useEffect(() => {
@@ -19,19 +31,18 @@ export default function Index() {
 	}, [])
 
 	const handleSignout = async () => {
-		console.log("signing out")
 		const { error } = await supabase.auth.signOut();
 		if (error) {
 			console.log("Error signing out:", error.message);
 		} else {
-			checkSession();
+			await checkSession();
 			console.log("Signed out!");
 		}
 	}
 
 	return (
 		<div>
-			{isLogged && (<h1>Good that you are logged in!</h1>)}
+			{isAuthenticated && (<h1>Good that you are logged in!</h1>)}
 			<h1>Hello World!</h1>
 			<Link href="/login">Sign In</Link>
 			<Link className="block bg-slate-500" href="/signup">Sign Up</Link>
