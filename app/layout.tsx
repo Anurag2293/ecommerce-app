@@ -1,6 +1,7 @@
 import { GeistSans } from 'geist/font/sans'
 import './globals.css'
 import ReduxProvider from '@/redux/provider'
+import Navbar from '@/components/Navbar'
 
 const defaultUrl = process.env.VERCEL_URL
 	? `https://${process.env.VERCEL_URL}`
@@ -22,6 +23,7 @@ export default function RootLayout({
 			<body className="bg-background text-foreground">
 				<main className="min-h-screen flex flex-col items-center">
 					<ReduxProvider>
+						<Navbar />
 						{children}
 					</ReduxProvider>
 				</main>
