@@ -4,14 +4,14 @@ import { useEffect } from "react";
 import Link from "next/link";
 
 import { createClient } from "@/utils/supabase/client";
-import { AppDispatch, useAppSelector } from "@/store/store";
+import { useAppSelector } from "@/store/store";
 import { logIn, logOut } from "@/store/features/auth-slice";
-import { useDispatch } from "react-redux";
+import useAppDispatch from "@/hooks/useAppDispatch";
 
 export default function Index() {
 	const supabase = createClient();
 	const isAuthenticated = useAppSelector((state) => state.authReducer.value.isAuthenticated);
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 
 	const checkSession = async () => {
 		try {
