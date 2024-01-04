@@ -1,61 +1,11 @@
-"use client"
-
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import LoginForm from './login-form'
 
-import { createClient } from "@/utils/supabase/client";
-import { logIn, logOut } from "@/redux/features/auth-slice";
-import { useAppDispatch } from "@/hooks/useAppDispatch";
-
-export default function Login({
-	searchParams,
-}: {
+type Props = {
 	searchParams: { message: string }
-}) {
-	const router = useRouter()
-	const supabase = createClient();
-	const dispatch = useAppDispatch();
+}
 
-	const checkSession = async () => {
-		try {
-			const session = await supabase.auth.getSession();
-			if (session.data.session) {
-				dispatch(logIn({username: String(session.data.session?.user.email), uid: String(session.data.session?.user.id) }));
-			} else {
-				dispatch(logOut());
-			}
-		} catch (error: any) {
-			alert(error.message);
-		}
-	}
-
-	const signInClient = async (formData: FormData) => {
-		console.log("sign in client")
-		try {
-			const email = formData.get('email') as string
-			const password = formData.get('password') as string
-
-			const res = await fetch('/api/auth/login', {
-				method: 'POST',
-				body: JSON.stringify({ email, password }),
-			})
-			const { error, response } = await res.json()
-
-			console.log({ error, response })
-
-			if (error) {
-				console.log(error);
-				throw new Error(error.message)
-			}
-
-			await checkSession();
-
-			return router.replace('/')
-		} catch (error: any) {
-			console.log(error);
-			return router.push(`/login?message=${error.message}`)
-		}
-	}
+const Login = ({ searchParams }: Props) => {
 
 	return (
 		<div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
@@ -80,42 +30,12 @@ export default function Login({
 				Back
 			</Link>
 
-			<form
-				className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
-				action={signInClient}
-			>
-				<label className="text-md" htmlFor="email">
-					Email
-				</label>
-				<input
-					className="rounded-md px-4 py-2 bg-inherit border mb-6"
-					name="email"
-					placeholder="you@example.com"
-					required
-				/>
-				<label className="text-md" htmlFor="password">
-					Password
-				</label>
-				<input
-					className="rounded-md px-4 py-2 bg-inherit border mb-6"
-					type="password"
-					name="password"
-					placeholder="••••••••"
-					required
-				/>
-				<button className="bg-green-700 rounded-md px-4 py-2 text-foreground mb-2">
-					Sign In
-				</button>
-				{searchParams?.message && (
-					<p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
-						{searchParams.message}
-					</p>
-				)}
-			</form>
+			<LoginForm />
 		</div>
 	)
 }
 
+export default Login;
 
 /*
 const signIn = async (formData: FormData) => {
