@@ -1,6 +1,6 @@
 import { GeistSans } from 'geist/font/sans'
 import './globals.css'
-import Navbar from '@/components/Navbar'
+import Nav from '@/components/Nav'
 import Provider from '@/components/provider'
 
 const defaultUrl = process.env.VERCEL_URL
@@ -24,7 +24,7 @@ export default function RootLayout({
 				<main className="min-h-screen flex flex-col items-center">
 					<Provider>
 						<header className='w-screen'>
-							<Navbar />
+							<Nav />
 						</header>
 						{children}
 					</Provider>

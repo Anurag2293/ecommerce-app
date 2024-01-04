@@ -8,6 +8,8 @@ import { useAppSelector } from "@/redux/store";
 import { logIn, logOut } from "@/redux/features/auth-slice";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 
+import SheetSide from "@/components/Cart";
+
 export default function Index() {
 	const supabase = createClient();
 	const isAuthenticated = useAppSelector((state) => state.authReducer.value.isAuthenticated);
