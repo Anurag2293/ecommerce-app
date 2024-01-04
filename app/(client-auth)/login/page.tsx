@@ -3,12 +3,31 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
+import { createClient } from "@/utils/supabase/client";
+import { logIn, logOut } from "@/redux/features/auth-slice";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+
 export default function Login({
 	searchParams,
 }: {
 	searchParams: { message: string }
 }) {
 	const router = useRouter()
+	const supabase = createClient();
+	const dispatch = useAppDispatch();
+
+	const checkSession = async () => {
+		try {
+			const session = await supabase.auth.getSession();
+			if (session.data.session) {
+				dispatch(logIn({username: String(session.data.session?.user.email), uid: String(session.data.session?.user.id) }));
+			} else {
+				dispatch(logOut());
+			}
+		} catch (error: any) {
+			alert(error.message);
+		}
+	}
 
 	const signInClient = async (formData: FormData) => {
 		console.log("sign in client")
@@ -28,6 +47,8 @@ export default function Login({
 				console.log(error);
 				throw new Error(error.message)
 			}
+
+			await checkSession();
 
 			return router.replace('/')
 		} catch (error: any) {

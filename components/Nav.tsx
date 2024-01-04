@@ -1,11 +1,12 @@
-import React from 'react'
+"use client"
+
 import Link from 'next/link'
 
-import { Button } from './ui/button'
+import { useAppSelector } from "@/redux/store";
+import { LoginButton, MobileMenu } from './Buttons';
 import Cart from './Cart'
 import NavInput from './NavInput'
-
-type Props = {}
+import Profile from './Profile';
 
 const NAV_MENU = [
     { title: "All", link: "/search" }, 
@@ -13,16 +14,13 @@ const NAV_MENU = [
     { title: "Stickers", link: "/search/stickers"}
 ] as const;
 
-const Nav = (props: Props) => {
+const Nav = () => {
+    const isAuthenticated = useAppSelector((state) => state.authReducer.value.isAuthenticated);
+
     return (
         <nav className='relative flex items-center justify-between p-4 lg:px-6'>
             <div className="block flex-none md:hidden">
-                <Button
-                    aria-label='Open mobile menu'
-                    className='flex h-11 w-11 items-center justify-center rounded-md border border-neutral-200 text-black transition-colors bg-background dark:border-neutral-700 dark:bg-background dark:text-white md:hidden'
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true" className="h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path></svg>
-                </Button>
+                <MobileMenu />
             </div>
             <div className='flex w-full items-center'>
                 <div className='flex w-full md:w-1/3'>
@@ -53,8 +51,10 @@ const Nav = (props: Props) => {
                 <div className='hidden justify-center md:flex md:w-1/3'>
                     <NavInput />
                 </div>
-                <div className='flex justify-end md:w-1/3'>
-                    <Cart />
+                <div className='flex justify-end md:w-1/3 gap-4'>
+                    {isAuthenticated && <Cart />}
+                    {isAuthenticated && <Profile />}
+                    {!isAuthenticated && <LoginButton /> }
                 </div>
             </div>
         </nav>
