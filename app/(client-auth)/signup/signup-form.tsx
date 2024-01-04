@@ -11,6 +11,8 @@ import * as z from "zod"
 import { createClient } from "@/utils/supabase/client";
 import { logIn, logOut } from "@/redux/features/auth-slice";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 
 // COMPONENT
 import { Button } from "@/components/ui/button"
@@ -50,9 +52,10 @@ type Props = {
 }
 
 const SignupForm = () => {
-    const router = useRouter()
+    const router = useRouter();
     const supabase = createClient();
     const dispatch = useAppDispatch();
+    const { toast } = useToast();
 
     const form = useForm<z.infer<typeof signupSchema>>({
         resolver: zodResolver(signupSchema),
@@ -74,7 +77,8 @@ const SignupForm = () => {
                 dispatch(logOut());
             }
         } catch (error: any) {
-            alert(error.message);
+            // alert(error.message);
+            throw new Error(error.message)
         }
     }
 
@@ -102,9 +106,20 @@ const SignupForm = () => {
                 throw new Error(error.message)
             }
             await checkSession();
+            toast({
+                variant: "default",
+                title: "Signed Up Successfully",
+                description: "Enter credentials to login",
+            })
             return router.push('/login?message=Enter Your Credentials to Login')
         } catch (error: any) {
-            console.log(error);
+            // console.log(error);
+            toast({
+                variant: "destructive",
+                title: "Error Signing Up",
+                description: error.message,
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+            })
             return router.replace(`/signup?message=${error.message || "Could not authenticate user"}`)
         }
     }

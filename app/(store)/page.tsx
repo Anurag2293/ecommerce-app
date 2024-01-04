@@ -2,16 +2,27 @@
 
 import Link from "next/link";
 import { useAppSelector } from "@/redux/store";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 
 export default function Index() {
 	const isAuthenticated = useAppSelector((state) => state.authReducer.value.isAuthenticated);
+	const { toast } = useToast();
 
 	return (
-		<div>
-			{isAuthenticated && (<h1>Good that you are logged in!</h1>)}
-			<h1>Hello World!</h1>
-			<Link href="/login">Sign In</Link>
-			<Link className="block bg-slate-500" href="/signup">Sign Up</Link>
-		</div>
+		<>
+			<div>Ecommerce App</div>
+			{/* <Button
+				variant="outline"
+				onClick={() => {
+					toast({
+						description: "Your message has been sent.",
+					})
+				}}
+			>
+				Show Toast
+			</Button> */}
+		</>
 	)
 }
