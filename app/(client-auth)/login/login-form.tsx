@@ -141,7 +141,7 @@ const LoginForm = () => {
             <CardFooter className="">
                 <Button className="w-full" variant="outline" asChild>
                     <Link href="/signup">
-                        Signup
+                        Sign Up
                     </Link>
                 </Button>
             </CardFooter>
