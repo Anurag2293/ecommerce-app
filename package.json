@@ -23,8 +23,6 @@
     "autoprefixer": "10.4.15",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
-    "embla-carousel-autoplay": "^8.0.0-rc18",
-    "embla-carousel-react": "^8.0.0-rc18",
     "geist": "^1.0.0",
     "lucide-react": "^0.302.0",
     "next": "latest",
