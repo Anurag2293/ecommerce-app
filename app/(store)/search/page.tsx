@@ -1,7 +1,11 @@
-import React from 'react'
+"use client"
+
+import React, { useState, useEffect } from 'react'
 
 // STATE
 import type { products as ProductType } from '@prisma/client'
+import { useToast } from '@/components/ui/use-toast'
+import { ToastAction } from "@/components/ui/toast"
 
 // COMPONENT
 import CollectionMenu from '@/components/CategoriesMenu'
@@ -10,18 +14,37 @@ import ProductCard from '@/components/ProductCard'
 
 type Props = {}
 
-const Search = async (props: Props) => {
-    const res = await fetch('http://localhost:3000/api/products?take=12');
-    const { error, response: products } = await res.json();
-    console.log({ products })
+const Search = (props: Props) => {
+    const [products, setProducts] = useState<ProductType[]>([]) 
+    const { toast } = useToast()
 
-    if (error) {
-        return (<div>Error</div>)
-    }
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const res = await fetch('/api/products?take=12');
+                const { error, response: products } = await res.json();
+                console.log({ products })
+
+                if (error) {
+                    throw new Error(error)
+                }
+
+                setProducts(products)
+            } catch (error: any) {
+                toast({
+                    variant: "destructive",
+                    title: "Error fetching Products",
+                    description: error.message,
+                    action: <ToastAction altText="Try again" onClick={fetchProducts}>Try again</ToastAction>,
+                })
+            }
+        }
+
+        fetchProducts()
+    }, [])
 
     return (
         <>
-            {/* <div>Search</div> */}
             <CollectionMenu />
             <SortMenu />
             <div className='w-full flex justify-between px-4 py-0 md:px-6 md:py-0'>
