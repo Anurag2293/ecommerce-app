@@ -1,12 +1,17 @@
 "use client"
 
+// NODE MODULES
 import { useEffect } from "react";
 
+// STATE
 import { createClient } from "@/utils/supabase/client";
 import { useAppSelector } from "@/redux/store";
 import { logIn, logOut } from "@/redux/features/auth-slice";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { ToastAction } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/use-toast"
 
+// COMPONENT
 import { Button } from "./ui/button"
 import {
     DropdownMenu,
@@ -15,12 +20,7 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuTrigger,
-    DropdownMenuPortal,
-    DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
+    DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
@@ -28,6 +28,7 @@ const Profile = () => {
     const supabase = createClient();
 	const isAuthenticated = useAppSelector((state) => state.authReducer.value.isAuthenticated);
 	const dispatch = useAppDispatch();
+    const { toast } = useToast();
 
 	useEffect(() => {
         const checkSession = async () => {
@@ -39,7 +40,13 @@ const Profile = () => {
                     dispatch(logOut());
                 }
             } catch (error: any) {
-                alert(error.message);
+                // alert(error.message);
+                toast({
+                    variant: "destructive",
+                    title: "Error",
+                    description: error.message,
+                    action: <ToastAction altText="Try again">Try again</ToastAction>,
+                })
             }
         }
 		checkSession();
@@ -48,10 +55,21 @@ const Profile = () => {
 	const handleSignout = async () => {
 		const { error } = await supabase.auth.signOut();
 		if (error) {
-			console.log("Error signing out:", error.message);
+			// console.log("Error signing out:", error.message);
+            toast({
+                variant: "destructive",
+                title: "Error signing out",
+                description: error.message,
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+            })
 		} else {
 			dispatch(logOut());
-			console.log("Signed out!");
+			// console.log("Signed out!");
+            toast({
+                variant: "default",
+                title: "Signed out!",
+                description: "You have been signed out"
+            })
 		}
 	}
 

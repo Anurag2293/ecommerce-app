@@ -11,6 +11,8 @@ import * as z from "zod"
 import { createClient } from "@/utils/supabase/client";
 import { logIn, logOut } from "@/redux/features/auth-slice";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { ToastAction } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/use-toast"
 
 // COMPONENT
 import { Button } from "@/components/ui/button"
@@ -45,9 +47,10 @@ type Props = {
 }
 
 const LoginForm = () => {
-    const router = useRouter()
+    const router = useRouter();
 	const supabase = createClient();
 	const dispatch = useAppDispatch();
+    const { toast } = useToast();
 
 	const checkSession = async () => {
 		try {
@@ -58,7 +61,7 @@ const LoginForm = () => {
 				dispatch(logOut());
 			}
 		} catch (error: any) {
-			alert(error.message);
+			throw new Error(error.message)
 		}
 	}
 
@@ -86,9 +89,20 @@ const LoginForm = () => {
 				throw new Error(error.message)
 			}
 			await checkSession();
+            toast({
+                variant: "default",
+                title: "Logged In",
+                description: "You have been logged in successfully!",
+            })
 			return router.replace('/')
 		} catch (error: any) {
-			console.log(error);
+			// console.log(error);
+            toast({
+                variant: "destructive",
+                title: "Error Logging In",
+                description: error.message,
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+            })
 			return router.push(`/login?message=${error.message}`)
 		}
     }
