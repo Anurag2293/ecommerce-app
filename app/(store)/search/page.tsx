@@ -11,7 +11,7 @@ import ProductCard from '@/components/ProductCard'
 type Props = {}
 
 const Search = async (props: Props) => {
-    const res = await fetch('http://localhost:3000/api/products');
+    const res = await fetch('http://localhost:3000/api/products?take=15');
     const { error, response: products } = await res.json();
     console.log({ products })
 
@@ -28,7 +28,7 @@ const Search = async (props: Props) => {
                 <div className='hidden md:block'>
                     Categories
                 </div>
-                <div className='w-full md:w-5/6 bg-red-400 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+                <div className='w-full md:w-5/6 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
                     {products.map((product: ProductType) => (
                         <ProductCard product={product} />
                     ))}
