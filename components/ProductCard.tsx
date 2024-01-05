@@ -25,7 +25,7 @@ const ProductCard = ({ product }: { product: ProductType}) => {
                         width={500}
                         height={500}
                     />
-                    <div className="absolute left-4 bottom-4 lg:left-1 lg:bottom-2 xl:left-4 xl:bottom-4 bg-black backdrop:blur-3xl">
+                    <div className="absolute left-4 bottom-4 lg:left-1 lg:bottom-2 xl:left-4 xl:bottom-4 bg-white dark:bg-black backdrop:blur-3xl">
                         <div className="w-auto border rounded-3xl p-1 pl-4 flex justify-between items-center gap-1 text-sm font-semibold">
                             <p className="xl:hidden">{product.title?.substring(0, 20)}</p>
                             <p className="hidden xl:block">{product.title}</p>

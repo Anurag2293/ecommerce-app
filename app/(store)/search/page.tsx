@@ -11,7 +11,7 @@ import ProductCard from '@/components/ProductCard'
 type Props = {}
 
 const Search = async (props: Props) => {
-    const res = await fetch('http://localhost:3000/api/products?take=15');
+    const res = await fetch('http://localhost:3000/api/products?take=12');
     const { error, response: products } = await res.json();
     console.log({ products })
 
