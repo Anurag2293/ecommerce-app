@@ -7,7 +7,12 @@ export const GET = async (request: NextRequest) => {
         const take = params.get('take') || 10;
         const skip = params.get('skip') || 0;
         const products = await prisma.products.findMany({ take: Number(take), skip: Number(skip) });
-        return NextResponse.json({ error: undefined, response: products });
+        const aggregations = await prisma.products.aggregate({
+            _count: {
+                id: true
+            }
+        })
+        return NextResponse.json({ error: undefined, response: products, totalProducts: aggregations._count.id });
     } catch (error) {
         return NextResponse.json({ error, response: undefined });
     }
@@ -20,7 +25,12 @@ export const POST = async (request: NextRequest) => {
             data: products || [],
             skipDuplicates: true
         });
-        return NextResponse.json({ error: undefined, response });
+        const aggregations = await prisma.products.aggregate({
+            _count: {
+                id: true
+            }
+        })
+        return NextResponse.json({ error: undefined, response, totalProducts: aggregations._count.id });
     } catch (error) {
         console.log(error);
         return NextResponse.json({ error, response: undefined });
@@ -36,7 +46,12 @@ export const PUT = async (request: NextRequest) => {
             where: { id },
             data: { ...originalProduct, ...productBody }
         });
-        return NextResponse.json({ error: undefined, response: updatedProduct });
+        const aggregations = await prisma.products.aggregate({
+            _count: {
+                id: true
+            }
+        })
+        return NextResponse.json({ error: undefined, response: updatedProduct, totalProducts: aggregations._count.id });
     } catch (error: any) {
         return NextResponse.json({ error: error.message, response: undefined });
     }
@@ -46,7 +61,12 @@ export const DELETE = async (request: NextRequest) => {
     try {
         const { id } = await request.json();
         const deletedProduct = await prisma.products.delete({ where: { id } });
-        return NextResponse.json({ error: undefined, response: deletedProduct });
+        const aggregations = await prisma.products.aggregate({
+            _count: {
+                id: true
+            }
+        })
+        return NextResponse.json({ error: undefined, response: deletedProduct, totalProducts: aggregations._count.id });
     } catch (error) {
         return NextResponse.json({ error, response: undefined });
     }
