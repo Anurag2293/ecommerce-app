@@ -7,13 +7,14 @@ import type { products as ProductType } from "@prisma/client"
 
 // COMPONENT
 import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import {
     Card,
     CardContent
 } from "@/components/ui/card"
 
-const ProductCard = ({ product }: { product: ProductType}) => {
+const ProductCard = ({ product, loading }: { product: ProductType, loading: boolean}) => {
     return (
         <Card key={product.id} className="w-auto aspect-square group hover:cursor-pointer hover:border hover:border-primary">
             <Link href={`/search/${product.id}`}>
@@ -36,6 +37,9 @@ const ProductCard = ({ product }: { product: ProductType}) => {
                     </div>
                 </CardContent>
             </Link>
+            {loading && (
+                <Skeleton className="h-full w-full rounded-b-lg" />
+            )}
         </Card>
     )
 }
