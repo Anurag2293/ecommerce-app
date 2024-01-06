@@ -14,6 +14,7 @@ import { ToastAction } from "@/components/ui/toast"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Badge } from "@/components/ui/badge"
+import SearchPagination from './SearchPagination'
 
 const SearchCard = ({ product }: { product: ProductType }) => {
     return (
@@ -53,6 +54,9 @@ const LoadingCard = ({ id }: { id: number }) => {
 type Props = {}
 
 const SearchResults = (props: Props) => {
+    const PRODUCTS_PER_PAGE = 12;
+    const [totalProducts, setTotalProducts] = useState<number>(0)
+    const [currentPage, setCurrentPage] = useState<number>(1)
     const [products, setProducts] = useState<ProductType[]>([])
     const [loading, setLoading] = useState<boolean>(false)
     const { toast } = useToast()
@@ -61,14 +65,13 @@ const SearchResults = (props: Props) => {
         const fetchProducts = async () => {
             try {
                 setLoading(true)
-                const res = await fetch('/api/products?take=12');
-                const { error, response: products } = await res.json();
+                const res = await fetch(`/api/products?take=${PRODUCTS_PER_PAGE}&skip=${(currentPage - 1) * PRODUCTS_PER_PAGE}`);
+                const { error, response: products, totalProducts: countProducts } = await res.json();
                 console.log({ products })
-
                 if (error) {
                     throw new Error(error)
                 }
-
+                setTotalProducts(countProducts)
                 setProducts(products)
             } catch (error: any) {
                 toast({
@@ -83,17 +86,27 @@ const SearchResults = (props: Props) => {
         }
 
         fetchProducts()
-    }, [])
+    }, [currentPage])
 
     return (
-        <div className='grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
-            {products.map((product: ProductType) => (
-                <SearchCard product={product} />
-            ))}
-            {loading && (Array.from({ length: 12 }).map((_, i) => (
-                <LoadingCard id={i} />
-            )))}
-        </div>
+        <>
+            <div className='grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+                {products.map((product: ProductType) => (
+                    <SearchCard product={product} />
+                ))}
+                {loading && (Array.from({ length: 12 }).map((_, i) => (
+                    <LoadingCard id={i} />
+                )))}
+            </div>
+            <div className='w-full flex justify-center items-center my-8'>
+                <SearchPagination
+                    totalProducts={totalProducts}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    productsPerPage={PRODUCTS_PER_PAGE}
+                />
+            </div>
+        </>
     )
 }
 
