@@ -10,28 +10,24 @@ import { ToastAction } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/use-toast"
 
 // COMPONENT
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
+import { Label } from "./ui/label"
 
-const CategoriesMenu = () =>{
+const CategoriesMenu = ({ currentCategoryName }: { currentCategoryName: string}) => {
     const { toast } = useToast();
-    const [categories, setCategories] = useState<CategoriesType[]>([{id: 0, name: "All"}]);
+    const [categories, setCategories] = useState<CategoriesType[]>([{ id: 0, name: "All" }]);
 
     useEffect(() => {
         const fetchCollection = async () => {
             try {
+                setCategories([]);
                 const res = await fetch("/api/categories");
-                const { error, response } = await res.json();
+                const { error, response: categoryList } = await res.json();
                 if (error) throw new Error(error);
-                setCategories(response);
-                console.log({ response })
+                categoryList.unshift({ id: 0, name: "All" });
+                setCategories(categoryList);
+                console.log({ categoryList })
             } catch (error: any) {
                 toast({
                     variant: "destructive",
@@ -45,32 +41,23 @@ const CategoriesMenu = () =>{
     }, []);
 
     return (
-        <div className="px-4 w-full md:hidden">
-            <Select>
-                <SelectTrigger className="w-full">
-                    <SelectValue placeholder="All" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectGroup>
-                        <SelectItem value="all">
-                            <Link href={`/search`}>
-                                All
+        <ScrollArea className="h-96 rounded-md border-none">
+            <div className="">
+                <Label className="mb-4 block text-sm text-gray-400 font-medium leading-none">Categories</Label>
+                {categories.map((category) => {
+                    category.name = String(category.name)
+                    const categoryName = category.name.replace(/-/g, " ").replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
+                    return (
+                        <div key={category.id}>
+                            <Link href={`/search/${category.name}`} className={`text-sm underline-offset-4 hover:underline ${currentCategoryName === category.name ? 'underline' : ''}`}>
+                                {categoryName}
                             </Link>
-                        </SelectItem>
-                        {categories.map((category) => {
-                            // convert category.name to Capitalize and replace - with space
-                            category.name = String(category.name)
-                            const categoryName = category.name.replace(/-/g, " ").replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
-                            return(<SelectItem key={category.id} value={String(category.id)}>
-                                <Link href={`/search/${category.name}`}>
-                                    {categoryName}
-                                </Link>
-                            </SelectItem>)
-                        })}
-                    </SelectGroup>
-                </SelectContent>
-            </Select>
-        </div>
+                            <Separator className="my-2" />
+                        </div>
+                    )
+                })}
+            </div>
+        </ScrollArea>
     )
 }
 

@@ -5,7 +5,7 @@ import ReduxProvider from '@/redux/provider'
 
 type Props = {}
 
-const Provider = ({
+const Providers = ({
     children,
 }: {
     children: React.ReactNode
@@ -24,4 +24,4 @@ const Provider = ({
     )
 }
 
-export default Provider
+export default Providers;
