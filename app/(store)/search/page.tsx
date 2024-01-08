@@ -1,19 +1,21 @@
 
 // COMPONENT
-import CollectionMenu from '@/components/CategoriesMenu'
-import SortMenu from '@/components/SortMenu'
+import CategoriesMenuMobile from '@/components/MobileCategoriesMenu'
+import SortMenu from '@/components/MobileSortMenu'
 import SearchResults from '@/components/SearchResults'
+import CategoriesMenu from '@/components/CategoriesMenu'
 
 type Props = {}
 
 const Search = (props: Props) => {
     return (
         <>
-            <CollectionMenu />
+            <CategoriesMenuMobile />
             <SortMenu />
             <div className='w-full flex justify-between px-4 py-0 md:px-6 md:py-0'>
                 <div className='hidden md:block'>
-                    Categories
+                    {/* Categories */}
+                    <CategoriesMenu currentCategoryName={"All"} />
                 </div>
                 <div className='w-full md:w-5/6'>
                     <SearchResults />

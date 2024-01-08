@@ -92,10 +92,10 @@ const SearchResults = (props: Props) => {
         <>
             <div className='grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
                 {products.map((product: ProductType) => (
-                    <SearchCard product={product} />
+                    <SearchCard key={product.id} product={product} />
                 ))}
                 {loading && (Array.from({ length: 12 }).map((_, i) => (
-                    <LoadingCard id={i} />
+                    <LoadingCard key={i} id={i} />
                 )))}
             </div>
             <div className='w-full flex justify-center items-center my-8'>

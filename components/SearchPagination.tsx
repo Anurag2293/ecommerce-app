@@ -39,7 +39,7 @@ const SearchPagination = ({ setCurrentPage, currentPage, totalProducts, products
 
                 {totalPages > 0 && (
                     Array.from({ length: totalPages }).map((_, i) => (
-                        <PaginationItem >
+                        <PaginationItem key={i}>
                             <PaginationLink href="#" onClick={() => setCurrentPage(i + 1)} isActive={currentPage === i+1}>
                                 {i + 1}
                             </PaginationLink>
