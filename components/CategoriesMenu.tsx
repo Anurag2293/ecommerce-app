@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import type { categories as CategoriesType } from "@prisma/client"
+import { usePathname } from "next/navigation"
 
 // STATE
 import { ToastAction } from "@/components/ui/toast"
@@ -15,6 +16,7 @@ import { Separator } from "@/components/ui/separator"
 import { Label } from "./ui/label"
 
 const CategoriesMenu = ({ currentCategoryName }: { currentCategoryName: string}) => {
+    const pathname = usePathname()
     const { toast } = useToast();
     const [categories, setCategories] = useState<CategoriesType[]>([{ id: 0, name: "All" }]);
 
@@ -38,7 +40,8 @@ const CategoriesMenu = ({ currentCategoryName }: { currentCategoryName: string})
             }
         }
         fetchCollection();
-    }, []);
+        // console.log({ pathname })
+    }, [pathname]);
 
     return (
         <ScrollArea className="h-96 rounded-md border-none">
@@ -49,7 +52,7 @@ const CategoriesMenu = ({ currentCategoryName }: { currentCategoryName: string})
                     const categoryName = category.name.replace(/-/g, " ").replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
                     return (
                         <div key={category.id}>
-                            <Link href={`/search/${category.name}`} className={`text-sm underline-offset-4 hover:underline ${currentCategoryName === category.name ? 'underline' : ''}`}>
+                            <Link href={`/search/${category.name === "All" ? "": category.name}`} className={`text-sm underline-offset-4 hover:underline ${currentCategoryName === category.name ? 'underline' : ''}`}>
                                 {categoryName}
                             </Link>
                             <Separator className="my-2" />
