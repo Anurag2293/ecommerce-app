@@ -1,10 +1,12 @@
 import React from 'react'
 
-type Props = {}
+type Props = {
+    params: { category: string }
+}
 
-const Category = (props: Props) => {
+const Category = ({ params }: Props) => {
     return (
-        <div>Category</div>
+        <div>Category: {params.category}</div>
     )
 }
 

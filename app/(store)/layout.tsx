@@ -1,6 +1,6 @@
 import Nav from '@/components/Nav'
 
-export default function RootLayout({
+export default function StoreLayout({
     children,
 }: {
     children: React.ReactNode
