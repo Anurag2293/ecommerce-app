@@ -15,7 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Label } from "./ui/label"
 
-const CategoriesMenu = ({ currentCategoryName }: { currentCategoryName: string}) => {
+const CategoriesMenu = () => {
     const pathname = usePathname()
     const { toast } = useToast();
     const [categories, setCategories] = useState<CategoriesType[]>([{ id: 0, name: "All" }]);
@@ -40,7 +40,7 @@ const CategoriesMenu = ({ currentCategoryName }: { currentCategoryName: string})
             }
         }
         fetchCollection();
-        // console.log({ pathname })
+        console.log({ pathname })
     }, [pathname]);
 
     return (
@@ -48,11 +48,17 @@ const CategoriesMenu = ({ currentCategoryName }: { currentCategoryName: string})
             <div className="">
                 <Label className="mb-4 block text-sm text-gray-400 font-medium leading-none">Categories</Label>
                 {categories.map((category) => {
+                    const pathnameArray = pathname.split("/");
+                    if (pathnameArray.length === 2) {
+                        pathnameArray.push("All");
+                    }
+
+                    // console.log({currentCategoryPathname})
                     category.name = String(category.name)
                     const categoryName = category.name.replace(/-/g, " ").replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
                     return (
                         <div key={category.id}>
-                            <Link href={`/search/${category.name === "All" ? "": category.name}`} className={`text-sm underline-offset-4 hover:underline ${currentCategoryName === category.name ? 'underline' : ''}`}>
+                            <Link href={`/search/${category.name === "All" ? "": category.name}`} className={`text-sm underline-offset-4 hover:underline ${pathnameArray[2] === category.name ? 'underline' : ''}`}>
                                 {categoryName}
                             </Link>
                             <Separator className="my-2" />
