@@ -1,6 +1,6 @@
 
 // COMPONENT
-import CategoriesMenuMobile from '@/components/MobileCategoriesMenu'
+import MobileCategoriesMenu from '@/components/MobileCategoriesMenu'
 import SortMenu from '@/components/MobileSortMenu'
 import SearchResults from '@/components/SearchResults'
 import CategoriesMenu from '@/components/CategoriesMenu'
@@ -12,7 +12,7 @@ export default function SearchLayout({
 }) {
     return (
         <>
-            <CategoriesMenuMobile />
+            <MobileCategoriesMenu />
             <SortMenu />
             <div className='w-full flex justify-between px-4 py-0 md:px-6 md:py-0'>
                 <div className='hidden md:block'>

@@ -4,6 +4,8 @@
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import type { categories as CategoriesType } from "@prisma/client"
+import { usePathname } from "next/navigation"
+import { useRouter } from 'next/navigation'
 
 // STATE
 import { ToastAction } from "@/components/ui/toast"
@@ -20,21 +22,25 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 
-const MobileCategoriesMenu = () =>{
+const MobileCategoriesMenu = () => {
     const { toast } = useToast();
-    const [categories, setCategories] = useState<CategoriesType[]>([{id: 0, name: "All"}]);
+    const router = useRouter();
+    const [categories, setCategories] = useState<CategoriesType[]>([{ id: 0, name: "All" }]);
+    const pathname = usePathname();
+    const categoriesPathArray = pathname.split("/");
+    categoriesPathArray.push("All");
 
     useEffect(() => {
         const fetchCollection = async () => {
             try {
                 setCategories([]);
                 const res = await fetch("/api/categories");
-                const { error, response } = await res.json();
-                if (error) throw new Error(error);
-                const all = { id: 0, name: "All" };
-                response.unshift(all);
-                setCategories(response);
-                console.log({ response })
+                const { error, response: categoryList } = await res.json();
+                if (error) {
+                    throw new Error(error);
+                }
+                categoryList.unshift({ id: 0, name: "All" });
+                setCategories(categoryList)
             } catch (error: any) {
                 toast({
                     variant: "destructive",
@@ -47,30 +53,36 @@ const MobileCategoriesMenu = () =>{
         fetchCollection();
     }, []);
 
+    const selectItemSubmit = (category: string) => {
+        console.log({category})
+        router.push(`/search/${category}`);
+    }
+
     return (
         <div className="px-4 w-full md:hidden">
             <Select>
-                <SelectTrigger className="w-full">
-                    <SelectValue placeholder="All" />
+                <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Theme" />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectGroup>
-                        <SelectItem value="all">
-                            <Link href={`/search`}>
-                                All
-                            </Link>
-                        </SelectItem>
-                        {categories.map((category) => {
-                            // convert category.name to Capitalize and replace - with space
-                            category.name = String(category.name)
-                            const categoryName = category.name.replace(/-/g, " ").replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
-                            return (<SelectItem key={category.id} value={String(category.id)}>
-                                <Link href={`/search/${category.name}`} className="underline">
-                                    {categoryName}
-                                </Link>
-                            </SelectItem>)
-                        })}
-                    </SelectGroup>
+                    <SelectItem 
+                        value="All"
+                        onClick={() => selectItemSubmit("")}
+                    >
+                        All
+                    </SelectItem>
+                    <SelectItem 
+                        value="smartphones"
+                        onClick={() => selectItemSubmit("smartphones")}
+                    >
+                        Smartphones
+                    </SelectItem>
+                    <SelectItem 
+                        value="laptops"
+                        onClick={() => selectItemSubmit("laptops")}
+                    >
+                        Laptop
+                    </SelectItem>
                 </SelectContent>
             </Select>
         </div>

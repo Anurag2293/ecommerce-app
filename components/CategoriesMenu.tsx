@@ -26,10 +26,12 @@ const CategoriesMenu = () => {
                 setCategories([]);
                 const res = await fetch("/api/categories");
                 const { error, response: categoryList } = await res.json();
-                if (error) throw new Error(error);
+                if (error) {
+                    throw new Error(error);
+                }
                 categoryList.unshift({ id: 0, name: "All" });
                 setCategories(categoryList);
-                console.log({ categoryList })
+                // console.log({ categoryList })
             } catch (error: any) {
                 toast({
                     variant: "destructive",
@@ -48,9 +50,9 @@ const CategoriesMenu = () => {
             <div className="">
                 <Label className="mb-4 block text-sm text-gray-400 font-medium leading-none">Categories</Label>
                 {categories.map((category) => {
-                    const pathnameArray = pathname.split("/");
-                    if (pathnameArray.length === 2) {
-                        pathnameArray.push("All");
+                    const categoriesArray = pathname.split("/");
+                    if (categoriesArray.length === 2) {
+                        categoriesArray.push("All");
                     }
 
                     // console.log({currentCategoryPathname})
@@ -58,7 +60,10 @@ const CategoriesMenu = () => {
                     const categoryName = category.name.replace(/-/g, " ").replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
                     return (
                         <div key={category.id}>
-                            <Link href={`/search/${category.name === "All" ? "": category.name}`} className={`text-sm underline-offset-4 hover:underline ${pathnameArray[2] === category.name ? 'underline' : ''}`}>
+                            <Link 
+                                href={`/search/${category.name === "All" ? "": category.name}`} 
+                                className={`text-sm underline-offset-4 hover:underline ${categoriesArray[2] === category.name ? 'underline' : ''}`}
+                            >
                                 {categoryName}
                             </Link>
                             <Separator className="my-2" />
