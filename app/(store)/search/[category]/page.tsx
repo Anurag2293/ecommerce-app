@@ -1,13 +1,13 @@
 import React, { Suspense } from 'react'
 import type { products as ProductType } from '@prisma/client';
 
-import { SEARCH_PRODUCTS_PER_PAGE } from '@/lib/contants';
+import { SEARCH_PRODUCTS_PER_PAGE, SITE_URL } from '@/lib/constants';
 import SearchCard from '@/components/search/SearchCard';
 import SearchCardLoading from '@/components/search/SearchCardLoading';
 
 async function getCategoryProducts(categoryName: string) {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/search?category=${categoryName}`);
+        const res = await fetch(`${SITE_URL}/api/search?category=${categoryName}`);
         const { error, response, totalProducts } = await res.json();
         return { error, products: response, totalProducts };
     } catch (error) {
@@ -26,7 +26,7 @@ const Category = async ({ params }: Props) => {
     if (error) {
         console.log(error);
         return (
-            <div>There was error fetching ${categoryName} products, {process.env.NEXT_PUBLIC_URL}</div>
+            <div>There was error fetching ${categoryName} products, {SITE_URL}</div>
         )
     }
 

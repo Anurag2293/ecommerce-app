@@ -7,7 +7,7 @@ import React, { useState, useEffect, Suspense } from 'react'
 import type { products as ProductType } from '@prisma/client'
 import { useToast } from '@/components/ui/use-toast'
 import { ToastAction } from "@/components/ui/toast"
-import { SEARCH_PRODUCTS_PER_PAGE } from '@/lib/contants'
+import { SEARCH_PRODUCTS_PER_PAGE } from '@/lib/constants'
 
 // COMPONENT
 import SearchPagination from './SearchPagination'
