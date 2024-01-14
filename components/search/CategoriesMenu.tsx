@@ -23,7 +23,7 @@ const CategoriesMenu = () => {
     useEffect(() => {
         const fetchCollection = async () => {
             try {
-                setCategories([]);
+                // setCategories([]);
                 const res = await fetch("/api/categories");
                 const { error, response: categoryList } = await res.json();
                 if (error) {

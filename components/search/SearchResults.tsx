@@ -1,7 +1,7 @@
 "use client"
 
 // NODE MODULES
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 
 // STATE
 import type { products as ProductType } from '@prisma/client'
@@ -10,18 +10,9 @@ import { ToastAction } from "@/components/ui/toast"
 import { SEARCH_PRODUCTS_PER_PAGE } from '@/lib/contants'
 
 // COMPONENT
-import { Card } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
 import SearchPagination from './SearchPagination'
 import SearchCard from './SearchCard'
-
-const LoadingCard = ({ id }: { id: number }) => {
-    return (
-        <Card key={id} className="w-auto aspect-square">
-            <Skeleton className="h-full w-full rounded-b-lg" />
-        </Card>
-    )
-}
+import SearchCardLoading from './SearchCardLoading'
 
 type Props = {}
 
@@ -29,16 +20,15 @@ const SearchResults = (props: Props) => {
     const [totalProducts, setTotalProducts] = useState<number>(0)
     const [currentPage, setCurrentPage] = useState<number>(1)
     const [products, setProducts] = useState<ProductType[]>([])
-    const [loading, setLoading] = useState<boolean>(false)
     const { toast } = useToast()
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                setLoading(true)
                 const res = await fetch(`/api/search?take=${SEARCH_PRODUCTS_PER_PAGE}&skip=${(currentPage - 1) * SEARCH_PRODUCTS_PER_PAGE}`);
                 const { error, response: products, totalProducts: countProducts } = await res.json();
-                console.log({ products })
+
+                // console.log({ products })
                 if (error) {
                     throw new Error(error)
                 }
@@ -51,8 +41,6 @@ const SearchResults = (props: Props) => {
                     description: error.message,
                     action: <ToastAction altText="Try again" onClick={fetchProducts}>Try again</ToastAction>,
                 })
-            } finally {
-                setLoading(false)
             }
         }
 
@@ -61,14 +49,19 @@ const SearchResults = (props: Props) => {
 
     return (
         <>
-            <div className='grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
-                {products.map((product: ProductType) => (
-                    <SearchCard key={product.id} product={product} />
-                ))}
-                {loading && (Array.from({ length: SEARCH_PRODUCTS_PER_PAGE }).map((_, i) => (
-                    <LoadingCard key={i} id={i} />
-                )))}
-            </div>
+            <Suspense
+                fallback={<div className="grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                    {Array.from({length: SEARCH_PRODUCTS_PER_PAGE}).map((_, i) => (
+                        <SearchCardLoading key={i} id={i} />
+                    ))}
+                </div>}
+            >
+                <div className='grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+                    {products.map((product: ProductType) => (
+                        <SearchCard key={product.id} product={product} />
+                    ))}
+                </div>
+            </Suspense>
             <div className='w-full flex justify-center items-center my-8'>
                 <SearchPagination
                     totalProducts={totalProducts}
