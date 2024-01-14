@@ -13,7 +13,7 @@ import { useToast } from "@/components/ui/use-toast"
 // COMPONENT
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-import { Label } from "./ui/label"
+import { Label } from "../ui/label"
 
 const CategoriesMenu = () => {
     const pathname = usePathname()

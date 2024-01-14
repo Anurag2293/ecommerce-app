@@ -65,7 +65,7 @@ const SearchResults = (props: Props) => {
         const fetchProducts = async () => {
             try {
                 setLoading(true)
-                const res = await fetch(`/api/products?take=${PRODUCTS_PER_PAGE}&skip=${(currentPage - 1) * PRODUCTS_PER_PAGE}`);
+                const res = await fetch(`/api/search?take=${PRODUCTS_PER_PAGE}&skip=${(currentPage - 1) * PRODUCTS_PER_PAGE}`);
                 const { error, response: products, totalProducts: countProducts } = await res.json();
                 console.log({ products })
                 if (error) {

@@ -1,4 +1,4 @@
-import Nav from '@/components/Nav'
+import Nav from '@/components/appbar/Nav'
 
 export default function StoreLayout({
     children,

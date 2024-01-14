@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
-import { Button } from "./ui/button"
+import { Button } from "../ui/button"
 import {
     Form,
     FormControl,
@@ -14,7 +14,7 @@ import {
     FormLabel,
     FormMessage
 } from "@/components/ui/form"
-import { Input } from "./ui/input"
+import { Input } from "../ui/input"
 
 const navInputSchema = z.object({
     searchQuery: z.string().min(1, {

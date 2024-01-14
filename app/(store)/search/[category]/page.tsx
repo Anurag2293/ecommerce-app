@@ -30,7 +30,7 @@ const Category = async ({ params }: Props) => {
         <>
             <div>Category: {params.category}</div>
             {products.map((product: ProductType) => (<div>{product.title}</div>))}
-            {process.env.NEXT_PUBLIC_SITE_URL}
+            {process.env.NEXT_PUBLIC_URL}
         </>
     )
 }

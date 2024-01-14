@@ -1,9 +1,9 @@
 
 // COMPONENT
-import CategoriesMenuMobile from '@/components/MobileCategoriesMenu'
-import SortMenu from '@/components/MobileSortMenu'
-import SearchResults from '@/components/SearchResults'
-import CategoriesMenu from '@/components/CategoriesMenu'
+import CategoriesMenuMobile from '@/components/search/MobileCategoriesMenu'
+import SortMenu from '@/components/search/MobileSortMenu'
+import SearchResults from '@/components/search/SearchResults'
+import CategoriesMenu from '@/components/search/CategoriesMenu'
 
 type Props = {}
 

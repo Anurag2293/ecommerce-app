@@ -12,7 +12,7 @@ import { ToastAction } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/use-toast"
 
 // COMPONENT
-import { Button } from "./ui/button"
+import { Button } from "../ui/button"
 import {
     DropdownMenu,
     DropdownMenuContent,
