@@ -1,0 +1,2 @@
+
+export const SEARCH_PRODUCTS_PER_PAGE = 12;
