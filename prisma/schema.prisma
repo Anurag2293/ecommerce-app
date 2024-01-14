@@ -28,6 +28,7 @@ model products {
   image3              String?  @db.VarChar(255)
   image4              String?  @db.VarChar(255)
   image5              String?  @db.VarChar(255)
+  category_id         Int?
 }
 
 model customers {

@@ -5,12 +5,19 @@ export const GET = async (request: NextRequest) => {
     try {
         const params = request.nextUrl.searchParams;
         const id = params.get("id")
+        const categoryName = params.get("category-name");
 
         let response;
         if (id) {
             response = await prisma.categories.findUniqueOrThrow({
                 where: {
                     id: Number(id)
+                }
+            })
+        } else if (categoryName) {
+            response = await prisma.categories.findUniqueOrThrow({
+                where: {
+                    name: categoryName
                 }
             })
         } else {

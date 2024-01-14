@@ -1,17 +1,19 @@
 import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
+export const revalidate = 10;
+
 export const GET = async (request: NextRequest) => {
     try { 
         const params = request.nextUrl.searchParams;
-        const take = params.get('take') || 10;
+        const take = params.get('take') || 12;
         const skip = params.get('skip') || 0;
-        const products = await prisma.products.findMany({ take: Number(take), skip: Number(skip) });
-        const aggregations = await prisma.products.aggregate({
-            _count: {
-                id: true
-            }
-        })
+
+        const [products, aggregations] = await Promise.all([
+            prisma.products.findMany({ take: Number(take), skip: Number(skip)}),
+            prisma.products.aggregate({ _count: { id: true }})
+        ]);
+    
         return NextResponse.json({ error: undefined, response: products, totalProducts: aggregations._count.id });
     } catch (error) {
         return NextResponse.json({ error, response: undefined });
